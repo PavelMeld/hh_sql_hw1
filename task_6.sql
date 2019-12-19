@@ -7,7 +7,7 @@
 select r_id, user_spec, mode() within group (order by spec_id desc) from 
 	((select r_id, user_spec, vacancy_id
 		from 
-			((select resume_id as r_id, array_agg(spec_id) as user_spec from resume_spec group by resume_id limit 100) as all_resume
+			((select resume_id as r_id, array_agg(spec_id) as user_spec from resume_spec group by resume_id) as all_resume
 		left join 
 			responses 
 		on
