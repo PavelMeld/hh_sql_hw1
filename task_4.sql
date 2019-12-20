@@ -15,6 +15,7 @@ from  (
 (
 	select  extract(month from created) as most_popular_resume_month 
 	from	resume 
+	where	active = true
 	group by (extract(month from created)) 
 	order by count(*) desc  limit 1
 ) as t2;
