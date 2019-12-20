@@ -2,6 +2,7 @@
 
 	Find month with maximum vacancies & maximum resume
 
+	https://explain.depesz.com/s/O9a8
 */
 
 select *

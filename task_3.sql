@@ -5,6 +5,7 @@
 		Get average high for each area
 		Get average middle for each area
 
+	https://explain.depesz.com/s/SUkK
 */
 
 select area_id, t1.area_avg_low, t2.area_avg_high, (t2.area_avg_high + t1.area_avg_low)/2 as area_avg 

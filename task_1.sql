@@ -50,7 +50,9 @@ CREATE TABLE resume(
 	area_id		integer,
 	text		text,
 	created		timestamp NOT NULL,
-	active		boolean DEFAULT true not NULL
+	changed		timestamp DEFAULT NULL,
+	active		boolean DEFAULT true not NULL,
+	root_id		integer DEFAULT null
 );
 
 CREATE TABLE resume_spec (

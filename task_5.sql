@@ -1,6 +1,8 @@
 /*
 	List vacansies alphabetically-ordered, with less than 5 responses (even without responses) during
 	first week after publication
+
+	https://explain.depesz.com/s/F2sO
 */
 
 select responded_vacancies.name
