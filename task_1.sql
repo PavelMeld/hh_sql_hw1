@@ -52,6 +52,7 @@ CREATE TABLE resume(
 	created		timestamp NOT NULL,
 	changed		timestamp DEFAULT NULL,
 	active		boolean DEFAULT true not NULL,
+	previous_id	integer DEFAULT null,
 	root_id		integer DEFAULT null
 );
 

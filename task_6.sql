@@ -3,7 +3,10 @@
 	List resume id, array of it's specializations and most popular
 	specialization of the vacansies it responded to
 
-	https://explain.depesz.com/s/kykH
+	https://explain.depesz.com/s/lgPV
+
+	With index :
+		https://explain.depesz.com/s/Yr7e
 */
 select r_id, user_spec, mode() within group (order by spec_id desc) 
 from 

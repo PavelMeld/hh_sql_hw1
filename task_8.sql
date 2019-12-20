@@ -20,27 +20,32 @@ BEGIN
 			return NULL;
 		END IF;
 
-		-- Update current record
-		UPDATE resume
+			
+		-- Archive OLD record with active = false, changed = now 
+		-- Update current record with new data and set previous_id to a newly created archive row
+		WITH archive_row as (
+			INSERT into resume(user_id, area_id, text, created, changed, active, previous_id, root_id)
+			VALUES (
+				OLD.user_id, 
+				OLD.area_id, 
+				OLD.text, 
+				OLD.created, 
+				NOW(),
+				false,
+				OLD.previous_id,
+				OLD.resume_id
+			) RETURNING resume_id
+		) UPDATE resume
 		SET 
 			user_id=NEW.user_id, 
 			area_id = NEW.area_id,
 			text = NEW.text,
-			created = NEW.created
+			created = NEW.created,
+			changed = NEW.changed,
+			active  = NEW.active,
+			previous_id = (select resume_id from archive_row)
 		WHERE
 			resume_id = NEW.resume_id;
-			
-		-- Archive OLD record with active = false, changed = now and root_id = resume_id
-		INSERT into resume(user_id, area_id, text, created, changed, active, root_id)
-		VALUES (
-			OLD.user_id, 
-			OLD.area_id, 
-			OLD.text, 
-			OLD.created, 
-			NOW(),
-			false,
-			NEW.resume_id
-		);
 
 	END IF;
 
@@ -64,26 +69,17 @@ EXECUTE PROCEDURE delete_update_handler();
 --
 --
 update resume set text='a5' where resume_id=5;
+select pg_sleep(5);
 update resume set text='a55' where resume_id=5;
+select pg_sleep(5);
 update resume set text='a555' where resume_id=5;
 
-select 
-	actual.resume_id, 
-	archive.changed as last_change_time,
-	archive.text as old_title,
-	actual.text as new_title
+
+select
+	p1.resume_id as resume_id, p2.changed as last_change_time, p2.text as old_title, p1.text as new_title 
 from 
-	(
-		select 
-			resume_id, text
-		from resume 
-		where 
-			resume_id = 5
-	) as actual,
-	(	
-		select changed, text
-		from resume 
-		where root_id = 5
-		order by changed desc
-		limit 1
-	) as archive;
+	resume p1 join resume p2 on p1.previous_id = p2.resume_id
+where
+	p2.root_id = 5
+order by 
+	p2.changed desc;
